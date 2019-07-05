@@ -1,0 +1,10 @@
+COMPILE_TARGET=\
+	$(RISCV_PREFIX)gcc \
+		$(2) -nostartfiles \
+		-I $(ROOTDIR)/riscv-test-env/ \
+		-I $(ROOTDIR)/riscv-test-env/p/ \
+		-I $(TARGETDIR)/$(RISCV_TARGET)/ \
+		-o $(work_dir_isa)/$$@ \
+		$$<
+
+#TODO RUN_TARGET=
