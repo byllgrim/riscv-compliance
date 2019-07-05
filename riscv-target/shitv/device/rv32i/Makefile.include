@@ -5,6 +5,9 @@ COMPILE_TARGET=\
 		-I $(ROOTDIR)/riscv-test-env/p/ \
 		-I $(TARGETDIR)/$(RISCV_TARGET)/ \
 		-o $(work_dir_isa)/$$@ \
-		$$<
+		$$<; \
+	$(RISCV_PREFIX)objcopy -O binary $(work_dir_isa)/$$@ $(work_dir_isa)/$$@.bin; \
+	hexdump -e '4/1 "%02x" "\n"' --no-squeezing $(work_dir_isa)/$$@.bin > $(work_dir_isa)/$$@.hex; \
+	echo CC $$@;
 
 #TODO RUN_TARGET=
