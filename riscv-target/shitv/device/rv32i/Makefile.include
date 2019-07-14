@@ -1,13 +1,15 @@
 COMPILE_TARGET=\
+	echo CC $$@; \
 	$(RISCV_PREFIX)gcc \
 		$(2) -nostartfiles \
 		-I $(ROOTDIR)/riscv-test-env/ \
 		-I $(ROOTDIR)/riscv-test-env/p/ \
 		-I $(TARGETDIR)/$(RISCV_TARGET)/ \
+		-T $(SHITVDIR)/sw/link.ld \
 		-o $(work_dir_isa)/$$@ \
-		$$<; \
-	$(RISCV_PREFIX)objcopy -O binary $(work_dir_isa)/$$@ $(work_dir_isa)/$$@.bin; \
-	hexdump -e '4/1 "%02x" "\n"' --no-squeezing $(work_dir_isa)/$$@.bin > $(work_dir_isa)/$$@.hex; \
-	echo CC $$@;
+		$$< \
+	&& $(RISCV_PREFIX)objcopy -O binary $(work_dir_isa)/$$@ $(work_dir_isa)/$$@.bin \
+	&& hexdump -e '4/1 "%02x" "\n"' --no-squeezing $(work_dir_isa)/$$@.bin > $(work_dir_isa)/$$@.hex
 
-#TODO RUN_TARGET=
+RUN_TARGET=\
+	make -C $(SHITVDIR)/sim run_hexfile HEXFILE=$(work_dir_isa)/$<.hex > $(work_dir_isa)/$@
